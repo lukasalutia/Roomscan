@@ -15,6 +15,10 @@ await app.register(cors, {
       cb(new Error('Not allowed by CORS'))
     }
   },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 })
 
 // Multipart: para recibir la imagen como form-data (máximo 10MB)
