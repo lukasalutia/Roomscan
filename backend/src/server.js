@@ -6,12 +6,15 @@ import { analyzeRoute } from './routes/analyze.js'
 
 const app = Fastify({ logger: true })
 
-// CORS: permite requests desde el frontend local
+// CORS: permite localhost (dev) y cualquier subdominio de vercel.app (prod)
 await app.register(cors, {
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    'http://localhost:5174', // puerto alternativo de Vite
-  ],
+  origin: (origin, cb) => {
+    if (!origin || origin.includes('localhost') || origin.endsWith('.vercel.app')) {
+      cb(null, true)
+    } else {
+      cb(new Error('Not allowed by CORS'))
+    }
+  },
 })
 
 // Multipart: para recibir la imagen como form-data (máximo 10MB)
