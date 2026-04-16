@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unzip -o \"Roomscan-proyecto-habitación.zip\" -d extracted/)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "Bash(node src/server.js)",
+      "Bash(curl -s http://localhost:3001/health)",
+      "Bash(pkill -f \"node.*server.js\")",
+      "Bash(xargs kill *)"
+    ]
+  }
+}
