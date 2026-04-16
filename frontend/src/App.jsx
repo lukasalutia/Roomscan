@@ -7,6 +7,16 @@ import RecommendationCard from './components/RecommendationCard.jsx'
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
+// Convierte un File a base64 string
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result.split(',')[1])
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+}
+
 export default function App() {
   const [view, setView] = useState('upload') // 'upload' | 'loading' | 'results'
   const [preview, setPreview] = useState(null)
@@ -27,11 +37,13 @@ export default function App() {
 
     try {
       const formData = new FormData()
-      formData.append('file', fileRef.current)
+      // Convertir imagen a base64 para compatibilidad con Safari y mobile
+      const base64 = await fileToBase64(fileRef.current)
 
       const res = await fetch(`${BACKEND_URL}/analyze`, {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: base64, mimeType: fileRef.current.type || 'image/jpeg' }),
       })
 
       if (!res.ok) {

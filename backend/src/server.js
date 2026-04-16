@@ -1,7 +1,6 @@
 import 'dotenv/config'
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
-import multipart from '@fastify/multipart'
 import { analyzeRoute } from './routes/analyze.js'
 
 const app = Fastify({ logger: true })
@@ -19,11 +18,6 @@ await app.register(cors, {
   allowedHeaders: ['Content-Type'],
   preflightContinue: false,
   optionsSuccessStatus: 204,
-})
-
-// Multipart: para recibir la imagen como form-data (máximo 10MB)
-await app.register(multipart, {
-  limits: { fileSize: 10 * 1024 * 1024 },
 })
 
 // Health check — usado para verificar que el server responde

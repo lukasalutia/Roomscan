@@ -3,24 +3,18 @@ import { analyzeImage } from '../services/ai.js'
 
 export async function analyzeRoute(app) {
   app.post('/analyze', async (request, reply) => {
-    // Leer el archivo del request multipart
-    const data = await request.file()
+    const { image, mimeType } = request.body
 
-    if (!data) {
+    if (!image) {
       return reply.code(400).send({ error: 'No se recibió ninguna imagen' })
     }
 
-    // Validar que sea una imagen
-    if (!data.mimetype.startsWith('image/')) {
-      return reply.code(400).send({ error: 'El archivo debe ser una imagen' })
-    }
-
-    // Leer en memoria — nunca guardar en disco
-    const buffer = await data.toBuffer()
+    // Decodificar base64 a buffer
+    const buffer = Buffer.from(image, 'base64')
     const sizeKB = Math.round(buffer.length / 1024)
-    request.log.info({ mimeType: data.mimetype, sizeKB }, 'imagen recibida')
+    request.log.info({ mimeType, sizeKB }, 'imagen recibida')
 
-    // Comprimir a máx 1280px de ancho y calidad 75 — suficiente para análisis visual
+    // Comprimir a máx 1280px de ancho y calidad 75
     const compressed = await sharp(buffer)
       .resize({ width: 1280, withoutEnlargement: true })
       .jpeg({ quality: 75 })

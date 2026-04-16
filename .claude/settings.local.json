@@ -8,7 +8,10 @@
       "Bash(node src/server.js)",
       "Bash(curl -s http://localhost:3001/health)",
       "Bash(pkill -f \"node.*server.js\")",
-      "Bash(xargs kill *)"
+      "Bash(xargs kill *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   }
 }
